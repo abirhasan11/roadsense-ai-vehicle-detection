@@ -13,12 +13,14 @@ import {
   Zap,
   TrendingUp,
   Cpu,
+  Moon,
+  Sun,
 } from 'lucide-react';
 import { DashboardSkeleton } from './SkeletonLoader';
 import { CountUpNumber } from './CountUpNumber';
 import { ModelTransparencyCard } from './ModelTransparencyCard';
 import { CitizenContributorCard } from './CitizenContributorCard';
-import { SystemStats, DetectionRecord, Language } from '../types';
+import { SystemStats, DetectionRecord, Language, ThemeMode } from '../types';
 import { getTranslation } from '../lib/translations';
 
 interface DashboardScreenProps {
@@ -32,6 +34,8 @@ interface DashboardScreenProps {
   onOpenMenu: () => void;
   onSelectDetectionRecord: (record: DetectionRecord) => void;
   lang: Language;
+  theme?: ThemeMode;
+  onToggleTheme?: () => void;
 }
 
 export const DashboardScreen: React.FC<DashboardScreenProps> = ({
@@ -45,6 +49,8 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
   onOpenMenu,
   onSelectDetectionRecord,
   lang,
+  theme = 'light',
+  onToggleTheme,
 }) => {
   const [loading, setLoading] = useState(true);
 
@@ -85,15 +91,33 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
           </div>
         </div>
 
-        <motion.button
-          whileTap={{ scale: 0.9 }}
-          onClick={onOpenNotifications}
-          className="relative p-2.5 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-violet-50 dark:hover:bg-slate-800 transition-colors cursor-pointer border border-[#E4E0FD] dark:border-slate-700"
-          aria-label="Notifications"
-        >
-          <Bell className="w-5 h-5 text-[#5A41DE]" />
-          <span className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-[#E5484D] ring-2 ring-white dark:ring-slate-900" />
-        </motion.button>
+        <div className="flex items-center gap-2">
+          {onToggleTheme && (
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              onClick={onToggleTheme}
+              className="p-2.5 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-violet-50 dark:hover:bg-slate-800 transition-colors cursor-pointer border border-[#E4E0FD] dark:border-slate-700"
+              aria-label="Toggle dark mode"
+              title="Toggle Dark / Light Mode"
+            >
+              {theme === 'dark' ? (
+                <Sun className="w-5 h-5 text-amber-400" />
+              ) : (
+                <Moon className="w-5 h-5 text-[#5A41DE]" />
+              )}
+            </motion.button>
+          )}
+
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            onClick={onOpenNotifications}
+            className="relative p-2.5 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-violet-50 dark:hover:bg-slate-800 transition-colors cursor-pointer border border-[#E4E0FD] dark:border-slate-700"
+            aria-label="Notifications"
+          >
+            <Bell className="w-5 h-5 text-[#5A41DE]" />
+            <span className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-[#E5484D] ring-2 ring-white dark:ring-slate-900" />
+          </motion.button>
+        </div>
       </div>
 
       {/* Main Content Area */}

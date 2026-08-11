@@ -91,6 +91,13 @@ export const RoadSceneSVG: React.FC<RoadSceneSVGProps> = ({
     ? 'from-[#1E1B38] via-[#2A2452] to-[#17142E]'
     : 'from-[#1C1745] via-[#2D2661] to-[#151233]';
 
+  // Check if current vehicle is actually autonomous
+  const isAutonomous = boundingBoxes.length > 0
+    ? boundingBoxes.some(b => b.isAutonomous)
+    : (scenePreset === 'highway' || scenePreset === 'testtrack');
+
+  const shouldShowLidar = showLidarRays && isAutonomous;
+
   return (
     <div className={`relative w-full h-full overflow-hidden bg-gradient-to-b ${bgColor} flex items-center justify-center select-none ${className}`}>
       {/* Background Grid Lines & Road Perspective */}
@@ -122,8 +129,8 @@ export const RoadSceneSVG: React.FC<RoadSceneSVGProps> = ({
           </linearGradient>
 
           <linearGradient id="carBodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#6C56EA" />
-            <stop offset="100%" stopColor="#3B28A8" />
+            <stop offset="0%" stopColor={isAutonomous ? "#6C56EA" : "#2B3245"} />
+            <stop offset="100%" stopColor={isAutonomous ? "#3B28A8" : "#191E2C"} />
           </linearGradient>
 
           <linearGradient id="carGlassGrad" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -170,8 +177,8 @@ export const RoadSceneSVG: React.FC<RoadSceneSVGProps> = ({
           </g>
         )}
 
-        {/* LiDAR Scanning Rays Originating from Autonomous Vehicle Dome */}
-        {showLidarRays && (
+        {/* LiDAR Scanning Rays ONLY if vehicle is actually autonomous */}
+        {shouldShowLidar && (
           <g opacity="0.65">
             {/* Spinning/pulsing LiDAR 360 degree field */}
             <ellipse cx="400" cy="235" rx="190" ry="60" fill="url(#lidarGlow)" className="animate-pulse-glow" />
@@ -192,8 +199,8 @@ export const RoadSceneSVG: React.FC<RoadSceneSVGProps> = ({
           </g>
         )}
 
-        {/* MAIN CAR ILLUSTRATION (AUTONOMOUS VEHICLE WITH TOP SENSOR DOME) */}
-        <g id="autonomousCarGroup" transform="translate(240, 200)">
+        {/* MAIN CAR ILLUSTRATION */}
+        <g id="carGroup" transform="translate(240, 200)">
           {/* Shadow beneath car */}
           <ellipse cx="160" cy="130" rx="140" ry="20" fill="#000000" opacity="0.6" />
 
@@ -201,7 +208,7 @@ export const RoadSceneSVG: React.FC<RoadSceneSVGProps> = ({
           <path
             d="M 30 110 L 45 75 C 60 45, 110 38, 160 38 C 210 38, 260 45, 275 75 L 290 110 C 300 115, 310 125, 305 130 L 15 130 C 10 125, 20 115, 30 110 Z"
             fill="url(#carBodyGrad)"
-            stroke="#A799FF"
+            stroke={isAutonomous ? "#A799FF" : "#64748B"}
             strokeWidth="1.5"
           />
 
@@ -213,33 +220,48 @@ export const RoadSceneSVG: React.FC<RoadSceneSVGProps> = ({
             strokeWidth="1"
           />
 
-          {/* Rear Headlights & Front LED Bar */}
-          <rect x="25" y="105" width="25" height="8" rx="4" fill="#1FAE71" />
-          <rect x="270" y="105" width="25" height="8" rx="4" fill="#1FAE71" />
-          <line x1="50" y1="109" x2="270" y2="109" stroke="#1FAE71" strokeWidth="2" opacity="0.8" />
+          {/* Human Driver Silhouette inside Cabin when NOT Autonomous */}
+          {!isAutonomous && (
+            <g transform="translate(135, 52)" opacity="0.8">
+              {/* Head */}
+              <circle cx="12" cy="8" r="5" fill="#E2E8F0" />
+              {/* Shoulders / Steering hold */}
+              <path d="M 4 20 C 4 14, 20 14, 20 20 Z" fill="#94A3B8" />
+              <text x="32" y="14" fill="#E2E8F0" fontSize="8" fontFamily="sans-serif" fontWeight="bold">
+                Human Driver
+              </text>
+            </g>
+          )}
+
+          {/* Headlights / Taillights */}
+          <rect x="25" y="105" width="25" height="8" rx="4" fill={isAutonomous ? "#1FAE71" : "#E5484D"} />
+          <rect x="270" y="105" width="25" height="8" rx="4" fill={isAutonomous ? "#1FAE71" : "#F5A524"} />
+          <line x1="50" y1="109" x2="270" y2="109" stroke={isAutonomous ? "#1FAE71" : "#94A3B8"} strokeWidth="2" opacity="0.8" />
 
           {/* Wheels */}
-          <rect x="50" y="120" width="45" height="16" rx="5" fill="#120F26" stroke="#4C3CA8" strokeWidth="2" />
-          <rect x="225" y="120" width="45" height="16" rx="5" fill="#120F26" stroke="#4C3CA8" strokeWidth="2" />
+          <rect x="50" y="120" width="45" height="16" rx="5" fill="#120F26" stroke={isAutonomous ? "#4C3CA8" : "#475569"} strokeWidth="2" />
+          <rect x="225" y="120" width="45" height="16" rx="5" fill="#120F26" stroke={isAutonomous ? "#4C3CA8" : "#475569"} strokeWidth="2" />
 
-          {/* TOP-MOUNTED AUTONOMOUS SENSOR / LIDAR DOME */}
-          <g id="topSensorDome" transform="translate(140, 20)">
-            {/* Base Mount Stand */}
-            <rect x="12" y="18" width="16" height="8" fill="#110E24" stroke="#6C56EA" strokeWidth="1" />
-            
-            {/* Spinning Cylindrical LiDAR Sensor */}
-            <rect x="4" y="2" width="32" height="16" rx="8" fill="#1FAE71" className="animate-pulse" />
-            <circle cx="20" cy="10" r="5" fill="#0D0A1C" />
-            <circle cx="20" cy="10" r="2" fill="#80FFCA" />
+          {/* TOP-MOUNTED AUTONOMOUS SENSOR / LIDAR DOME ONLY IF AUTONOMOUS */}
+          {isAutonomous && (
+            <g id="topSensorDome" transform="translate(140, 20)">
+              {/* Base Mount Stand */}
+              <rect x="12" y="18" width="16" height="8" fill="#110E24" stroke="#6C56EA" strokeWidth="1" />
+              
+              {/* Spinning Cylindrical LiDAR Sensor */}
+              <rect x="4" y="2" width="32" height="16" rx="8" fill="#1FAE71" className="animate-pulse" />
+              <circle cx="20" cy="10" r="5" fill="#0D0A1C" />
+              <circle cx="20" cy="10" r="2" fill="#80FFCA" />
 
-            {/* Radar wave rings emission */}
-            <circle cx="20" cy="10" r="14" fill="none" stroke="#1FAE71" strokeWidth="1" opacity="0.6" className="animate-ping" />
-            
-            {/* Sensor Tag */}
-            <text x="20" y="-4" textAnchor="middle" fill="#1FAE71" fontSize="10" fontFamily="Space Grotesk" fontWeight="bold">
-              360° LiDAR Dome
-            </text>
-          </g>
+              {/* Radar wave rings emission */}
+              <circle cx="20" cy="10" r="14" fill="none" stroke="#1FAE71" strokeWidth="1" opacity="0.6" className="animate-ping" />
+              
+              {/* Sensor Tag */}
+              <text x="20" y="-4" textAnchor="middle" fill="#1FAE71" fontSize="10" fontFamily="Space Grotesk" fontWeight="bold">
+                360° LiDAR Dome
+              </text>
+            </g>
+          )}
         </g>
       </svg>
 

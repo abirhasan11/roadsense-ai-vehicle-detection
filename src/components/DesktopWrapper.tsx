@@ -63,7 +63,7 @@ export const DesktopWrapper: React.FC<DesktopWrapperProps> = ({ children }) => {
       <main className="w-full flex-1 flex items-center justify-center p-0 md:py-8">
         {layoutMode === 'phoneFrame' ? (
           /* Phone Frame Container */
-          <div className="w-full h-full md:h-[840px] md:max-w-[430px] md:rounded-[44px] md:border-[10px] md:border-slate-800 md:shadow-[0_25px_60px_rgba(0,0,0,0.6)] bg-white overflow-hidden relative flex flex-col transition-all duration-300">
+          <div className="w-full h-full md:h-[840px] md:max-w-[430px] md:rounded-[44px] md:border-[10px] md:border-slate-800 md:shadow-[0_25px_60px_rgba(0,0,0,0.6)] bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-100 overflow-hidden relative flex flex-col transition-all duration-300">
             
             {/* Phone Speaker Notch bar (desktop only) */}
             <div className="hidden md:flex justify-center pt-2 pb-1 bg-slate-900 shrink-0">
@@ -73,14 +73,14 @@ export const DesktopWrapper: React.FC<DesktopWrapperProps> = ({ children }) => {
             </div>
 
             {/* App Screen Content */}
-            <div className="flex-1 overflow-y-auto relative bg-slate-50">
+            <div className="flex-1 overflow-y-auto relative bg-slate-50 dark:bg-slate-950">
               {children}
             </div>
           </div>
         ) : (
           /* Wide Responsive Layout Container */
-          <div className="w-full max-w-5xl bg-white md:rounded-3xl md:border md:border-slate-800 md:shadow-2xl overflow-hidden min-h-[780px] text-slate-800 flex flex-col relative transition-all duration-300">
-            <div className="flex-1 overflow-y-auto relative bg-slate-50">
+          <div className="w-full max-w-5xl bg-white dark:bg-slate-950 md:rounded-3xl md:border md:border-slate-800 md:shadow-2xl overflow-hidden min-h-[780px] text-slate-800 dark:text-slate-100 flex flex-col relative transition-all duration-300">
+            <div className="flex-1 overflow-y-auto relative bg-slate-50 dark:bg-slate-950">
               {children}
             </div>
           </div>

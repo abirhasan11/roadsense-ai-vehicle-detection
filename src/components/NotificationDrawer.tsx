@@ -38,21 +38,21 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex justify-end">
-      <div className="bg-white w-full max-w-sm h-full shadow-2xl p-5 flex flex-col justify-between border-l border-[#E4E0FD] animate-slide-left">
+      <div className="bg-white dark:bg-slate-900 w-full max-w-sm h-full shadow-2xl p-5 flex flex-col justify-between border-l border-[#E4E0FD] dark:border-slate-800 animate-slide-left text-slate-900 dark:text-slate-100">
         <div>
-          <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
+          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4 mb-4">
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-xl bg-violet-100 text-[#5A41DE]">
+              <div className="p-2 rounded-xl bg-violet-100 dark:bg-violet-950/70 text-[#5A41DE] dark:text-purple-300">
                 <Bell className="w-4 h-4" />
               </div>
-              <h2 className="font-display font-bold text-slate-900 text-base">
+              <h2 className="font-display font-bold text-slate-900 dark:text-white text-base">
                 System Alerts
               </h2>
             </div>
 
             <button
               onClick={onClose}
-              className="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
+              className="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -62,7 +62,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
             {notifications.map((n) => (
               <div
                 key={n.id}
-                className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 space-y-1"
+                className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700 space-y-1"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
@@ -73,13 +73,13 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
                     ) : (
                       <Zap className="w-4 h-4 text-[#5A41DE]" />
                     )}
-                    <h3 className="font-semibold text-slate-900 text-xs sm:text-sm">
+                    <h3 className="font-semibold text-slate-900 dark:text-white text-xs sm:text-sm">
                       {n.title}
                     </h3>
                   </div>
-                  <span className="text-[10px] text-slate-400">{n.time}</span>
+                  <span className="text-[10px] text-slate-400 dark:text-slate-500">{n.time}</span>
                 </div>
-                <p className="text-xs text-slate-600 leading-relaxed pl-5">
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed pl-5">
                   {n.description}
                 </p>
               </div>

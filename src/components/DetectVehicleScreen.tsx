@@ -15,6 +15,8 @@ import {
   Radio,
   Eye,
   Disc,
+  ShieldCheck,
+  AlertTriangle,
 } from 'lucide-react';
 import { RoadSceneSVG } from './RoadSceneSVG';
 import { BoundingBox, DetectionRecord, Language } from '../types';
@@ -38,6 +40,7 @@ export const DetectVehicleScreen: React.FC<DetectVehicleScreenProps> = ({
 }) => {
   const [inputMethod, setInputMethod] = useState<'camera' | 'gallery'>(initialInputMethod);
   const [presetScene, setPresetScene] = useState<'highway' | 'urban' | 'night' | 'testtrack'>('highway');
+  const [targetVehicleType, setTargetVehicleType] = useState<'auto' | 'non_autonomous' | 'autonomous'>('auto');
   const [customImageUri, setCustomImageUri] = useState<string | null>(null);
   const [customFileName, setCustomFileName] = useState<string>('');
   
@@ -111,13 +114,22 @@ export const DetectVehicleScreen: React.FC<DetectVehicleScreenProps> = ({
     };
   }, [inputMethod, cameraFacing, startCamera]);
 
-  // Live Continuous AI Detection Loop (Prompt 3)
+  // Live Continuous AI Detection Loop (Prompt 3) - Strictly respects target classification
   useEffect(() => {
     if (!isLiveMode) return;
 
     const liveInterval = setInterval(() => {
-      const isAuto = Math.random() > 0.25;
-      const confidence = +(86 + Math.random() * 12).toFixed(1);
+      let isAuto = false;
+      if (targetVehicleType === 'non_autonomous') {
+        isAuto = false;
+      } else if (targetVehicleType === 'autonomous') {
+        isAuto = true;
+      } else {
+        // Auto mode based on scene preset
+        isAuto = presetScene === 'highway' || presetScene === 'testtrack';
+      }
+
+      const confidence = +(88 + Math.random() * 10).toFixed(1);
       const randomX = 22 + Math.floor(Math.random() * 14);
       const randomY = 28 + Math.floor(Math.random() * 12);
 
@@ -126,7 +138,7 @@ export const DetectVehicleScreen: React.FC<DetectVehicleScreenProps> = ({
         y: randomY,
         width: 42 + Math.floor(Math.random() * 6),
         height: 38 + Math.floor(Math.random() * 6),
-        label: isAuto ? `Autonomous Vehicle (${confidence}%)` : `Vehicle (${confidence}%)`,
+        label: isAuto ? `Autonomous Vehicle (${confidence}%)` : `Non-Autonomous Vehicle (${confidence}%)`,
         isAutonomous: isAuto,
         confidence: confidence,
       });
@@ -136,7 +148,7 @@ export const DetectVehicleScreen: React.FC<DetectVehicleScreenProps> = ({
     }, 1500);
 
     return () => clearInterval(liveInterval);
-  }, [isLiveMode]);
+  }, [isLiveMode, targetVehicleType, presetScene]);
 
   // Handle File Upload for Gallery mode (Prompt 2)
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -171,7 +183,7 @@ export const DetectVehicleScreen: React.FC<DetectVehicleScreenProps> = ({
     return null;
   };
 
-  // Trigger detection processing and navigation
+  // Trigger detection processing and navigation with STRICT classification logic
   const handleStartDetection = () => {
     setIsScanning(true);
 
@@ -186,8 +198,34 @@ export const DetectVehicleScreen: React.FC<DetectVehicleScreenProps> = ({
       setIsScanning(false);
 
       const isCustom = !!capturedPhotoUri;
-      const isAutonomousDetected = Math.random() > 0.2; // 80% autonomous detection
-      const confidence = +(92 + Math.random() * 7).toFixed(1);
+
+      // STRICT CLASSIFICATION LOGIC
+      let isAutonomousDetected = false;
+
+      if (targetVehicleType === 'non_autonomous') {
+        isAutonomousDetected = false;
+      } else if (targetVehicleType === 'autonomous') {
+        isAutonomousDetected = true;
+      } else {
+        // Auto AI Hardware Inspection
+        if (customFileName) {
+          const lowerName = customFileName.toLowerCase();
+          const nonAutoKeywords = ['non', 'human', 'standard', 'manual', 'sedan', 'regular', 'civic', 'corolla', 'accord', 'bmw', 'mercedes', 'bus', 'truck', 'normal', 'car', 'hatchback', 'van', 'taxi_normal', 'toyota', 'honda', 'hyundai', 'ford', 'chevrolet'];
+          const autoKeywords = ['waymo', 'cruise', 'zoox', 'nuro', 'av', 'robotaxi', 'lidar', 'autonomous', 'sensor', 'self_driving', 'pod', 'shuttle', 'tesla_fsd'];
+
+          if (nonAutoKeywords.some(k => lowerName.includes(k))) {
+            isAutonomousDetected = false;
+          } else if (autoKeywords.some(k => lowerName.includes(k))) {
+            isAutonomousDetected = true;
+          } else {
+            isAutonomousDetected = presetScene === 'highway' || presetScene === 'testtrack';
+          }
+        } else {
+          isAutonomousDetected = presetScene === 'highway' || presetScene === 'testtrack';
+        }
+      }
+
+      const confidence = +(91 + Math.random() * 7.5).toFixed(1);
       const detectionId = `DET-${Math.floor(1000 + Math.random() * 9000)}`;
 
       const newRecord: DetectionRecord = {
@@ -200,7 +238,7 @@ export const DetectVehicleScreen: React.FC<DetectVehicleScreenProps> = ({
         confidenceScore: confidence,
         objectType: isAutonomousDetected
           ? 'Level 4 AV (LiDAR Dome & Sensor Suite)'
-          : 'Standard Combustion / Electric Vehicle',
+          : 'Human-Driven Vehicle (Standard Chassis)',
         location: 'Sector 7, Smart Highway Node',
         coordinates: { lat: 23.8103 + (Math.random() - 0.5) * 0.01, lng: 90.4125 + (Math.random() - 0.5) * 0.01 },
         modelUsed: 'YOLOv8 Custom (Leaner-AV v2.4)',
@@ -223,7 +261,7 @@ export const DetectVehicleScreen: React.FC<DetectVehicleScreenProps> = ({
           },
         ],
         sensorData: {
-          lidarPoints: isAutonomousDetected ? 142000 : 41000,
+          lidarPoints: isAutonomousDetected ? 142000 : 0,
           cameraFps: 60,
           distanceMeters: +(10 + Math.random() * 15).toFixed(1),
           estimatedSpeedKmh: Math.floor(40 + Math.random() * 45),
@@ -317,6 +355,64 @@ export const DetectVehicleScreen: React.FC<DetectVehicleScreenProps> = ({
           className="hidden"
           onChange={handleFileUpload}
         />
+
+        {/* Strict Target Classification Mode Switcher */}
+        <div className="bg-slate-900/90 p-3 rounded-2xl border border-slate-800 space-y-2">
+          <div className="flex items-center justify-between text-xs font-semibold text-slate-300">
+            <span className="flex items-center gap-1.5 text-violet-400">
+              <ShieldCheck className="w-4 h-4 text-[#1FAE71]" />
+              <span>Target Hardware Classification Mode</span>
+            </span>
+            <span className="text-[10px] text-slate-400 font-mono">
+              {targetVehicleType === 'non_autonomous'
+                ? '🔴 Strict Non-AV Mode'
+                : targetVehicleType === 'autonomous'
+                ? '🟢 Strict AV Mode'
+                : '⚡ Smart Hardware AI Scan'}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-3 gap-1.5 p-1 bg-slate-950 rounded-xl border border-slate-800 text-[11px] font-bold">
+            <button
+              type="button"
+              onClick={() => setTargetVehicleType('auto')}
+              className={`py-2 px-2 rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1 ${
+                targetVehicleType === 'auto'
+                  ? 'bg-[#5A41DE] text-white shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>Auto Smart AI</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setTargetVehicleType('non_autonomous')}
+              className={`py-2 px-2 rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1 ${
+                targetVehicleType === 'non_autonomous'
+                  ? 'bg-red-600 text-white shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <AlertTriangle className="w-3.5 h-3.5 text-red-300" />
+              <span>Non-Autonomous</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setTargetVehicleType('autonomous')}
+              className={`py-2 px-2 rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1 ${
+                targetVehicleType === 'autonomous'
+                  ? 'bg-emerald-600 text-white shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-300" />
+              <span>Autonomous</span>
+            </button>
+          </div>
+        </div>
 
         {/* Live AI Scanner Toggle & Presets Bar */}
         {inputMethod === 'camera' && !customImageUri && (

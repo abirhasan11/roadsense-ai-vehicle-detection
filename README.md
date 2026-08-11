@@ -1,105 +1,148 @@
+<div align="center">
+
 # 🚗 RoadSense AI
+### Next-Generation Autonomous Vehicle Detection & Explainable Safety Intelligence Platform
 
-> **Next-Generation Autonomous Vehicle Detection & Explainable Safety Intelligence Platform — Detect. Predict. Prevent.**
+**Detect. Predict. Prevent.**
 
-![React](https://img.shields.io/badge/React-18.3-61DAFB?logo=react&logoColor=black)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?logo=typescript&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-5.4-646CFF?logo=vite&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-06B6D4?logo=tailwindcss&logoColor=white)
-![Motion](https://img.shields.io/badge/Motion-Framer-0055FF?logo=framer&logoColor=white)
-![Google Gemini](https://img.shields.io/badge/Google_Gemini-2.5_Flash-8E75B2?logo=google&logoColor=white)
-
----
-
-## 📌 Table of Contents
-- [The Problem Statement](#-the-problem-statement)
-- [Solution Overview](#-solution-overview)
-- [Technical Stack](#-technical-stack)
-- [Key Features](#-key-features)
-- [Installation Guide](#-installation-guide)
-- [Future Roadmap](#-future-roadmap)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![React](https://img.shields.io/badge/React-18.3-61DAFB?logo=react&logoColor=white)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-5.4-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Motion](https://img.shields.io/badge/Motion-11.x-E91E63?logo=framer&logoColor=white)](https://motion.dev/)
+[![Google Gemini API](https://img.shields.io/badge/Google_Gemini-2.5_Flash-4285F4?logo=googlecloud&logoColor=white)](https://ai.google.dev/)
 
 ---
 
-## 🚨 The Problem Statement
+</div>
 
-The rapid commercial growth of Autonomous Vehicles (AVs) is transforming urban mobility, yet it exposes critical flaws in current infrastructure. RoadSense AI directly addresses three major industry gaps:
+## 📌 Problem Statement
 
-* **Black-Box AI Decisions:** There is a severe lack of transparency in how autonomous vehicles interpret their surroundings and make split-second choices.
-* **Missing Predictive Analytics:** Current systems lack proactive, urban risk assessment tools required to foresee and prevent collisions *before* they happen.
-* **Inaccessible Interfaces:** Existing researcher and safety tools are overly technical, excluding citizen contributors and hindering accessible safety audits.
+The rapid commercial expansion of **Autonomous Vehicles (AVs)**—such as self-driving robotaxis, unmanned shuttles, and autonomous freight trucks—presents new challenges for urban infrastructure, municipal traffic management, and pedestrian safety. 
+
+Current computer vision solutions face three critical limitations:
+1. **Black-Box Decision Making**: Conventional object detectors output static 2D bounding boxes without explaining *why* a vehicle was classified as autonomous (e.g., distinguishing a standard passenger sedan from an AV prototype equipped with roof LiDAR pods and side camera arrays).
+2. **Lack of Predictive Urban Context**: Individual vehicle detections are rarely connected to macro-level city traffic risk patterns or regional safety advisories for pedestrians.
+3. **Inaccessible Interfaces**: Complex analytical tools often neglect accessibility standards, lacking voice narration, multi-language localization, and intuitive visual feedback for field researchers and visually impaired citizens.
+
+---
 
 ## 💡 Solution Overview
 
-RoadSense AI provides a full-stack, real-time safety intelligence architecture designed for transparency and action. By capturing live hardware profiling from roof LiDAR domes and bumper radars, the platform translates raw environmental data into human-readable insights. 
+**RoadSense AI** is a full-stack, research-grade computer vision platform designed to detect, interpret, and map autonomous vehicles in real time. Built with an explainability-first philosophy, RoadSense AI bridges the gap between raw hardware feature extraction and actionable civic intelligence.
 
-Utilizing **Explainable AI (Grad-CAM XAI)**, RoadSense highlights neural activation zones to clarify exactly *why* and *how* a vehicle makes a decision. Coupled with predictive safety alerts and a highly inclusive design, it successfully bridges the gap between complex AV technology and public road safety.
+- **Real-Time Detection & Hardware Profiling**: Processes optical camera streams and uploaded road images to identify specialized AV hardware footprints (roof LiDAR domes, 360° sensor pods, bumper radar arrays).
+- **Explainable AI (XAI) & Advanced Analytics**: Integrates Grad-CAM saliency heatmaps to visually isolate neural activation regions, alongside animated convergence timelines showing model confidence evolution layer-by-layer.
+- **Inclusive Accessibility**: Features Web Speech API voice synthesis, bilingual internationalization (English & Bengali), high-contrast accessibility modes, and interactive before/after split-screen camera feeds.
 
 ---
 
 ## 🛠️ Technical Stack
 
-| Category | Technologies |
-| :--- | :--- |
-| **Frontend Core** | React 18.3, TypeScript 5.5, Tailwind CSS 4.0, Motion (Framer Motion) |
-| **Build & Server** | Vite 5.4, Express.js (Node.js), esbuild |
-| **AI & Models** | `@google/genai` SDK (Gemini 2.5 Flash) |
-| **Browser APIs** | Web Speech API, Web Audio API, `navigator.mediaDevices`, Web Share API |
-| **Data Visualization**| Recharts, HTML5 Canvas |
+RoadSense AI is built on a modern, high-performance web architecture optimized for low-latency edge simulation and responsive UI interactions:
+
+- **Frontend Core**: [React 18.3](https://react.dev/) — Component-driven architecture with functional state orchestration.
+- **Language**: [TypeScript 5.5](https://www.typescriptlang.org/) — Strict static typing for robust data structures and API contracts.
+- **Styling**: [Tailwind CSS 4.0](https://tailwindcss.com/) — Utility-first, responsive design supporting native dark and light themes.
+- **Build Tooling & Server**: [Vite 5.4](https://vitejs.dev/) + [Express.js](https://expressjs.com/) — Fast HMR during development and single-file CommonJS bundling via `esbuild` for Cloud Run container execution.
+- **Animations & Transitions**: [Motion](https://motion.dev/) (Framer Motion) — Fluid layout shifts, route transition animations, and interactive drawer gestures.
+- **Multi-Modal AI Integration**: [@google/genai SDK](https://www.npmjs.com/package/@google/genai) — Server-side integration with Google Gemini 2.5 Flash for hardware feature verification.
+- **Visualization & Synthesizers**: [Recharts](https://recharts.org/) for analytics charts, Web Audio API for dual-tone audio cues, and Web Speech API for voice synthesis.
 
 ---
 
-## ✨ Key Features
+## ⚡ Key Features
 
-### 📷 Camera Integration
-* **Live Webcam Streaming:** Seamless device camera integration via `navigator.mediaDevices.getUserMedia`.
-* **Split-Screen Compare Mode:** Side-by-side visualization of raw optical feeds vs. AI/LiDAR overlay data.
-* **Snapshot & Upload:** High-performance Canvas-based snapshot capture and multi-format gallery upload support.
+### 📷 1. Camera Integration & Dual-Stream Processing
+- **Live Device Stream**: Connects to native device hardware via `navigator.mediaDevices.getUserMedia` with fallback permission handling.
+- **Instant Canvas Shutter**: Captures high-resolution video frame snapshots directly to an HTML5 canvas for bounding box overlay rendering.
+- **Split-Screen Compare Mode**: Real-time dual stream preview displaying the raw optical camera feed on the left alongside the AI-augmented feed with simulated 3D LiDAR vector scans on the right.
+- **Multi-Source Image Upload**: Supports local photo uploads (`accept="image/*"`) with instant bounding box analysis and image comparison sliders.
 
-### 🔄 Real-Time Simulation
-* **Live Scanner Mode:** Continuous 1.5-second polling intervals for real-time environmental processing.
-* **Explainable AI (XAI):** Grad-CAM saliency heatmaps that highlight exact neural activation and detection zones.
-* **Predictive Warnings:** Animated convergence timeline SVG charts and proactive traffic safety alerts.
+### 🔄 2. Real-Time Simulation & AI Explainability
+- **Live Continuous AI Scanner**: Performs continuous simulated inference every 1.5 seconds with dynamic bounding boxes and confidence score fluctuations ($85\%\text{–}98\%$).
+- **Grad-CAM Saliency Heatmaps**: Overlays visual explainability maps highlighting neural focus regions (e.g., Roof LiDAR Dome $48\%$ activation, Front Radar $32\%$ activation).
+- **Inference Convergence Timeline**: Renders an animated SVG line chart tracking confidence score evolution across neural network processing layers ($0\text{ ms}$ input to final class prediction).
+- **Predictive Risk Assessment**: Generates contextual traffic advisories, sector safety indices, and pedestrian buffer recommendations.
 
-### 📊 History & Analytics
-* **Comprehensive Logs:** Detailed record tracking including localized LiDAR point density metrics.
-* **Advanced Filtering:** Powerful search and sort functionality for past environmental scans.
-* **Urban Insights:** City-wide AV density insights visually represented on a vector map.
-* **Data Export:** One-click JSON and PNG export capabilities tailored for researchers.
+### 📜 3. History Tracking & Urban Analytics
+- **Persistent Detection Logs**: Saves structured record logs containing classification metadata, timestamp, GPS coordinates, processing latency ($12\text{ ms}$), and LiDAR point cloud density ($18,400\text{ pts}$).
+- **Interactive Search & Filtering**: Filter historical records by vehicle type (*AV Shuttle*, *Robotaxi*, *Non-AV*), confidence threshold, or sector location.
+- **City-Wide Insights Heatmap**: Interactive city vector map displaying sector AV density heat zones (High, Medium, Low), active fleet counts, and traffic safety planning recommendations.
+- **Data Export & Sharing**: Export detection history as structured JSON (`roadsense-DET-xxxx.json`) or generate shareable PNG report cards via HTML5 canvas and Web Share API (`navigator.share`).
 
-### ♿ Accessibility & Community
-* **Voice-Guided Read-Aloud:** Screen-free auditing powered by the Web Speech API (`speechSynthesis`).
-* **Bilingual Support:** Full interface internationalization for English and Bengali.
-* **Multisensory Feedback:** Dual-tone Web Audio cues and haptic vibration feedback for critical alerts.
-* **Citizen Gamification:** XP levels and achievement badges to incentivize community road safety contributors.
+### 🎙️ 4. Accessibility & Inclusive Design
+- **Voice-Guided Narration**: Hands-free read-aloud feature powered by `SpeechSynthesisUtterance`, speaking detection summaries, confidence scores, and safety alerts.
+- **Bilingual Internationalization (i18n)**: One-tap toggle between **English** and **Bengali (বাংলা)** across all interface labels, tooltips, and spoken voice text (`bn-BD`).
+- **Tactile & Auditory Cues**: Integrated Web Audio API dual-tone sound synthesizer and mobile vibration feedback (`navigator.vibrate`) upon successful detection.
+- **Gamified Citizen Contributor Engine**: Level progression (*Level 3: AV Sentinel*), XP tracking, and unlockable achievement badges encouraging community road safety participation.
 
 ---
 
-## 🚀 Installation Guide
+## 📥 Installation Guide
 
-**Prerequisites:** 
-* Node.js (v18 or higher)
-* npm (v9 or higher)
+### Prerequisites
+Ensure you have the following tools installed on your development machine:
+- **Node.js**: `v18.0.0` or higher
+- **npm**: `v9.0.0` or higher
+- **Web Browser**: Google Chrome, Mozilla Firefox, Microsoft Edge, or Apple Safari (Webcam & Speech API support recommended)
 
-Follow these steps to run RoadSense AI locally:
+### Step-by-Step Setup
 
-```bash
-# 1. Clone the repository
-git clone [https://github.com/your-username/roadsense-ai.git](https://github.com/your-username/roadsense-ai.git)
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/your-username/roadsense-ai.git
+   cd roadsense-ai
+   ```
 
-# 2. Navigate into the project directory
-cd roadsense-ai
+2. **Install Dependencies**
+   ```bash
+   npm install
+   ```
 
-# 3. Install dependencies
-npm install
+3. **Configure Environment Variables**
+   Create a `.env` file in the project root based on `.env.example`:
+   ```bash
+   cp .env.example .env
+   ```
+   Add your Google Gemini API key to enable server-side multi-modal AI analysis:
+   ```env
+   GEMINI_API_KEY=your_google_gemini_api_key_here
+   ```
 
-# 4. Configure environment variables
-# Create a .env file in the root directory and add your Gemini API Key
-echo "VITE_GEMINI_API_KEY=your_api_key_here" > .env
+4. **Launch the Development Server**
+   ```bash
+   npm run dev
+   ```
+   Access the live preview in your browser at `http://localhost:3000`.
 
-# 5. Start the development server
-npm run dev
+5. **Build for Production**
+   To compile both the React client bundle and the server entry point:
+   ```bash
+   npm run build
+   ```
+   To run the production server:
+   ```bash
+   npm run start
+   ```
 
-# 6. Build and start for production
-npm run build && npm run start
+---
 
+## 🗺️ Future Roadmap
+
+- [ ] **Edge Hardware WebGPU Acceleration**: Migrate real-time object detection inference to client-side WebGPU for zero-latency frame processing.
+- [ ] **V2X (Vehicle-to-Everything) Protocol Simulator**: Integrate real-time WebSocket listeners simulating DSRC / C-V2X telemetry packets broadcast by surrounding autonomous vehicles.
+- [ ] **Multi-Camera Fleet Stitching**: Support multi-angle camera stream inputs to synthesize 360° bird's-eye view (BEV) road occupancy grids.
+- [ ] **Decentralized Citizen Data Logging**: Implement Web3/IPFS immutable record logging for community-verified traffic safety auditing.
+- [ ] **Native Mobile Mobile SDK**: Package core vision and speech engines into React Native / Expo modules for iOS and Android deployments.
+
+---
+
+<div align="center">
+
+**RoadSense AI — Paving the Way for Safer Autonomous Urban Mobility**
+
+*Developed for Computer Vision & Civic Traffic Safety Innovation*
+
+</div>

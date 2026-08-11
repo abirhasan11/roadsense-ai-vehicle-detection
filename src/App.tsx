@@ -175,6 +175,8 @@ export default function App() {
                 onOpenMenu={() => setIsAboutModalOpen(true)}
                 onSelectDetectionRecord={handleSelectRecord}
                 lang={lang}
+                theme={theme}
+                onToggleTheme={handleToggleTheme}
               />
             </motion.div>
           )}

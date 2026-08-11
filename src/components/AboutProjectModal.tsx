@@ -18,21 +18,21 @@ export const AboutProjectModal: React.FC<AboutProjectModalProps> = ({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+          className="absolute top-5 right-5 p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Header */}
         <div className="space-y-2 pr-8">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-100 text-[#5A41DE] text-xs font-bold">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-100 dark:bg-violet-950/70 text-[#5A41DE] dark:text-purple-300 text-xs font-bold">
             <Cpu className="w-3.5 h-3.5" />
             <span>Project Specification</span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold font-display text-slate-900 leading-tight">
+          <h2 className="text-xl sm:text-2xl font-bold font-display text-slate-900 dark:text-white leading-tight">
             AI Based Leaner Autonomous Vehicle Detection
           </h2>
-          <p className="text-xs text-slate-500 font-medium">
+          <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
             Next-Gen Edge Perception Architecture
           </p>
         </div>
@@ -50,36 +50,36 @@ export const AboutProjectModal: React.FC<AboutProjectModalProps> = ({
 
         {/* Technical Features Checklist */}
         <div className="space-y-3">
-          <h3 className="font-display font-bold text-slate-900 text-sm">
+          <h3 className="font-display font-bold text-slate-900 dark:text-white text-sm">
             Technical Architecture
           </h3>
 
-          <div className="space-y-2 text-xs text-slate-700">
-            <div className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-100">
+          <div className="space-y-2 text-xs text-slate-700 dark:text-slate-300">
+            <div className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700">
               <CheckCircle2 className="w-4 h-4 text-[#1FAE71] shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold text-slate-900">Custom YOLOv8 Vision Model</p>
-                <p className="text-slate-500 text-[11px] mt-0.5">
+                <p className="font-semibold text-slate-900 dark:text-white">Custom YOLOv8 Vision Model</p>
+                <p className="text-slate-500 dark:text-slate-400 text-[11px] mt-0.5">
                   Trained on 50,000+ highway and urban driving frames labeled for roof-mounted sensor rigs and autonomous shuttles.
                 </p>
               </div>
             </div>
 
-            <div className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-100">
+            <div className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700">
               <CheckCircle2 className="w-4 h-4 text-[#1FAE71] shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold text-slate-900">360° LiDAR Sensor Dome Classification</p>
-                <p className="text-slate-500 text-[11px] mt-0.5">
+                <p className="font-semibold text-slate-900 dark:text-white">360° LiDAR Sensor Dome Classification</p>
+                <p className="text-slate-500 dark:text-slate-400 text-[11px] mt-0.5">
                   Identifies spinning LiDAR units, side radar pods, and automated emergency brake arrays.
                 </p>
               </div>
             </div>
 
-            <div className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-100">
+            <div className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700">
               <CheckCircle2 className="w-4 h-4 text-[#1FAE71] shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold text-slate-900">14.2ms Edge Latency</p>
-                <p className="text-slate-500 text-[11px] mt-0.5">
+                <p className="font-semibold text-slate-900 dark:text-white">14.2ms Edge Latency</p>
+                <p className="text-slate-500 dark:text-slate-400 text-[11px] mt-0.5">
                   Lean neural architecture allows 60 FPS real-time processing directly on embedded automotive edge units.
                 </p>
               </div>
