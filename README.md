@@ -1,27 +1,100 @@
-Overview
-Project Title & Tagline:
-Title: 🚗 RoadSense AI
-Tagline: Next-Generation Autonomous Vehicle Detection & Explainable Safety Intelligence Platform — Detect. Predict. Prevent.
-Tech Badges for React, TypeScript, Vite, Tailwind CSS, Motion (Framer Motion), and Google Gemini.
-Problem Statement:
-Outlines the rapid commercial growth of Autonomous Vehicles (AVs) and highlights three major industry gaps: black-box AI decisions, lack of predictive urban risk analytics, and inaccessible researcher interfaces.
-Solution Overview:
-Details RoadSense AI's full-stack architecture, focusing on real-time hardware profiling (roof LiDAR domes, bumper radar), Explainable AI (Grad-CAM XAI), predictive safety alerts, and inclusive accessibility design.
-Technical Stack:
-Frontend Core: React 18.3, TypeScript 5.5, Tailwind CSS 4.0, Motion (Framer Motion).
-Build & Server: Vite 5.4, Express.js (Node.js), esbuild bundling.
-AI & Browser APIs: @google/genai SDK (Gemini 2.5 Flash), Web Speech API (SpeechSynthesis), Web Audio API, Recharts, and Web Share API.
-Key Features:
-Camera Integration: Live device webcam streaming via navigator.mediaDevices.getUserMedia, split-screen compare mode (raw optical vs. AI/LiDAR overlay), canvas snapshot capture, and multi-format gallery upload.
-Real-Time Simulation: Continuous 1.5s live scanner mode, Grad-CAM saliency heatmaps highlighting neural activation zones, animated convergence timeline SVG charts, and predictive traffic safety warnings.
-History Tracking: Comprehensive record logs with LiDAR point density, search & filtering, city-wide AV density insights vector map, and JSON/PNG export capabilities.
-Accessibility: Voice-guided read-aloud (speechSynthesis), bilingual internationalization (English & Bengali), dual-tone Web Audio cues, haptic vibration feedback, and citizen contributor gamification (XP levels & badges).
-Installation Guide:
-Prerequisites (Node.js v18+, npm v9+).
-Step-by-step shell commands for git clone, npm install, .env configuration (GEMINI_API_KEY), running the development server (npm run dev), and building/starting for production (npm run build && npm run start).
-Future Roadmap:
-Client-side WebGPU acceleration for zero-latency edge inference.
-Real-time V2X (Vehicle-to-Everything) WebSocket telemetry listeners.
-Multi-camera stream stitching for 360° bird's-eye view (BEV) road grids.
-Decentralized IPFS transaction logging for community road safety audits.
-Native mobile SDK packaging (React Native / Expo).
+# 🚗 RoadSense AI
+
+> **Next-Generation Autonomous Vehicle Detection & Explainable Safety Intelligence Platform — Detect. Predict. Prevent.**
+
+![React](https://img.shields.io/badge/React-18.3-61DAFB?logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-5.4-646CFF?logo=vite&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-06B6D4?logo=tailwindcss&logoColor=white)
+![Motion](https://img.shields.io/badge/Motion-Framer-0055FF?logo=framer&logoColor=white)
+![Google Gemini](https://img.shields.io/badge/Google_Gemini-2.5_Flash-8E75B2?logo=google&logoColor=white)
+
+---
+
+## 📖 Table of Contents
+- [The Problem Statement](#-the-problem-statement)
+- [Solution Overview](#-solution-overview)
+- [Technical Stack](#-technical-stack)
+- [Key Features](#-key-features)
+- [Installation Guide](#-installation-guide)
+- [Future Roadmap](#-future-roadmap)
+
+---
+
+## 🚨 The Problem Statement
+
+The rapid commercial growth of Autonomous Vehicles (AVs) is transforming urban mobility, but it brings critical challenges that remain unaddressed in current infrastructure. RoadSense AI tackles three major industry gaps:
+
+*   **Black-Box AI Decisions:** Lack of transparency in how vehicles interpret their surroundings and make split-second choices.
+*   **Missing Predictive Analytics:** Absence of proactive, urban risk assessment tools to foresee and prevent collisions before they happen.
+*   **Inaccessible Interfaces:** Current researcher and safety tools are highly technical, excluding citizen contributors and accessible safety audits.
+
+## 💡 Solution Overview
+
+RoadSense AI provides a full-stack, real-time safety intelligence architecture. By capturing live hardware profiling from roof LiDAR domes and bumper radars, the platform translates raw environmental data into human-readable insights. Utilizing **Explainable AI (Grad-CAM XAI)**, RoadSense highlights neural activation zones to clarify vehicle decision-making. Coupled with predictive safety alerts and a highly inclusive, accessible design, it bridges the gap between complex AV technology and public road safety.
+
+---
+
+## 🛠 Technical Stack
+
+| Category | Technologies |
+| :--- | :--- |
+| **Frontend Core** | React 18.3, TypeScript 5.5, Tailwind CSS 4.0, Motion (Framer Motion) |
+| **Build & Server** | Vite 5.4, Express.js (Node.js), esbuild |
+| **AI & Models** | `@google/genai` SDK (Gemini 2.5 Flash) |
+| **Browser APIs** | Web Speech API, Web Audio API, `navigator.mediaDevices`, Web Share API |
+| **Data Visualization** | Recharts, HTML5 Canvas |
+
+---
+
+## ✨ Key Features
+
+### 📷 Camera Integration
+*   **Live Webcam Streaming:** Seamless device camera integration via `navigator.mediaDevices.getUserMedia`.
+*   **Split-Screen Compare Mode:** Side-by-side visualization of raw optical feeds vs. AI/LiDAR overlay data.
+*   **Snapshot & Upload:** Canvas-based snapshot capture and multi-format gallery upload support.
+
+### 🔄 Real-Time Simulation
+*   **Live Scanner Mode:** Continuous 1.5-second polling intervals for real-time environmental processing.
+*   **Explainable AI (XAI):** Grad-CAM saliency heatmaps that highlight exact neural activation and detection zones.
+*   **Predictive Warnings:** Animated convergence timeline SVG charts and proactive traffic safety alerts.
+
+### 📊 History & Analytics
+*   **Comprehensive Logs:** Detailed record tracking including localized LiDAR point density metrics.
+*   **Advanced Filtering:** Search and sort functionality for past environmental scans.
+*   **Urban Insights:** City-wide AV density insights visualized on a vector map.
+*   **Data Export:** One-click JSON and PNG export capabilities for researchers.
+
+### ♿ Accessibility & Community
+*   **Voice-Guided Read-Aloud:** Powered by the Web Speech API (`speechSynthesis`) for screen-free auditing.
+*   **Bilingual Internationalization:** Full interface support for English and Bengali.
+*   **Multisensory Feedback:** Dual-tone Web Audio cues and haptic vibration feedback for critical alerts.
+*   **Citizen Gamification:** XP levels and achievement badges to incentivize community road safety contributors.
+
+---
+
+## 🚀 Installation Guide
+
+**Prerequisites:** 
+*   Node.js (v18 or higher)
+*   npm (v9 or higher)
+
+Follow these steps to run RoadSense AI locally:
+
+```bash
+# 1. Clone the repository
+git clone [https://github.com/your-username/roadsense-ai.git](https://github.com/your-username/roadsense-ai.git)
+cd roadsense-ai
+
+# 2. Install dependencies
+npm install
+
+# 3. Configure environment variables
+# Create a .env file in the root directory and add your Gemini API Key
+echo "VITE_GEMINI_API_KEY=your_api_key_here" > .env
+
+# 4. Start the development server
+npm run dev
+
+# 5. Build and start for production
+npm run build && npm run start
