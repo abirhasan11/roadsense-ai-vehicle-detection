@@ -1,0 +1,6 @@
+{
+  "name": "RoadSense AI",
+  "description": "Autonomous Vehicle Detection system with real-time detection, scanner simulator, confidence analytics, and history tracking.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
