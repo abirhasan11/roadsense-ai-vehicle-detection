@@ -138,7 +138,16 @@ export default function App() {
   };
 
   return (
-    <DesktopWrapper>
+    <DesktopWrapper
+      currentScreen={currentScreen}
+      onNavigate={(screen) => setCurrentScreen(screen)}
+      onOpenDetect={handleOpenCameraDetect}
+      lang={lang}
+      onToggleLang={handleToggleLang}
+      theme={theme}
+      onToggleTheme={handleToggleTheme}
+      onOpenNotifications={() => setIsNotificationOpen(true)}
+    >
       <div className={`relative min-h-full w-full bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300 ${theme === 'dark' ? 'dark' : ''}`}>
         
         {/* Toast Notification Container */}
@@ -175,6 +184,7 @@ export default function App() {
                 onOpenMenu={() => setIsAboutModalOpen(true)}
                 onSelectDetectionRecord={handleSelectRecord}
                 lang={lang}
+                onToggleLang={handleToggleLang}
                 theme={theme}
                 onToggleTheme={handleToggleTheme}
               />

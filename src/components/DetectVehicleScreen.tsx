@@ -22,6 +22,7 @@ import { RoadSceneSVG } from './RoadSceneSVG';
 import { BoundingBox, DetectionRecord, Language } from '../types';
 import { getTranslation } from '../lib/translations';
 import { playDetectionChime, triggerHapticFeedback } from '../lib/audio';
+import { useLayout } from '../context/LayoutContext';
 
 interface DetectVehicleScreenProps {
   initialInputMethod?: 'camera' | 'gallery';
@@ -38,6 +39,7 @@ export const DetectVehicleScreen: React.FC<DetectVehicleScreenProps> = ({
   lang,
   onShowToast,
 }) => {
+  const { isPhoneFrame } = useLayout();
   const [inputMethod, setInputMethod] = useState<'camera' | 'gallery'>(initialInputMethod);
   const [presetScene, setPresetScene] = useState<'highway' | 'urban' | 'night' | 'testtrack'>('highway');
   const [targetVehicleType, setTargetVehicleType] = useState<'auto' | 'non_autonomous' | 'autonomous'>('auto');
@@ -311,42 +313,7 @@ export const DetectVehicleScreen: React.FC<DetectVehicleScreenProps> = ({
       </div>
 
       {/* Main Detector Area */}
-      <div className="p-4 sm:p-6 max-w-xl mx-auto w-full space-y-5">
-        {/* Toggle Input Mode: Camera vs Gallery */}
-        <div className="bg-slate-800/80 p-1.5 rounded-2xl border border-slate-700/80 flex items-center gap-1">
-          <motion.button
-            whileTap={{ scale: 0.96 }}
-            onClick={() => {
-              setInputMethod('camera');
-              setCustomImageUri(null);
-            }}
-            className={`flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
-              inputMethod === 'camera'
-                ? 'bg-[#5A41DE] text-white shadow-md'
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            <Camera className="w-4 h-4" />
-            <span>{getTranslation(lang, 'cameraSimulator')}</span>
-          </motion.button>
-
-          <motion.button
-            whileTap={{ scale: 0.96 }}
-            onClick={() => {
-              setInputMethod('gallery');
-              if (fileInputRef.current) fileInputRef.current.click();
-            }}
-            className={`flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
-              inputMethod === 'gallery'
-                ? 'bg-[#5A41DE] text-white shadow-md'
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            <Upload className="w-4 h-4" />
-            <span>{getTranslation(lang, 'galleryUpload')}</span>
-          </motion.button>
-        </div>
-
+      <div className="p-4 sm:p-6 w-full max-w-7xl mx-auto space-y-4">
         {/* Hidden File Input for Gallery mode */}
         <input
           ref={fileInputRef}
@@ -356,165 +323,128 @@ export const DetectVehicleScreen: React.FC<DetectVehicleScreenProps> = ({
           onChange={handleFileUpload}
         />
 
-        {/* Strict Target Classification Mode Switcher */}
-        <div className="bg-slate-900/90 p-3 rounded-2xl border border-slate-800 space-y-2">
-          <div className="flex items-center justify-between text-xs font-semibold text-slate-300">
-            <span className="flex items-center gap-1.5 text-violet-400">
-              <ShieldCheck className="w-4 h-4 text-[#1FAE71]" />
-              <span>Target Hardware Classification Mode</span>
-            </span>
-            <span className="text-[10px] text-slate-400 font-mono">
-              {targetVehicleType === 'non_autonomous'
-                ? '🔴 Strict Non-AV Mode'
-                : targetVehicleType === 'autonomous'
-                ? '🟢 Strict AV Mode'
-                : '⚡ Smart Hardware AI Scan'}
-            </span>
-          </div>
-
-          <div className="grid grid-cols-3 gap-1.5 p-1 bg-slate-950 rounded-xl border border-slate-800 text-[11px] font-bold">
-            <button
-              type="button"
-              onClick={() => setTargetVehicleType('auto')}
-              className={`py-2 px-2 rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1 ${
-                targetVehicleType === 'auto'
-                  ? 'bg-[#5A41DE] text-white shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>Auto Smart AI</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setTargetVehicleType('non_autonomous')}
-              className={`py-2 px-2 rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1 ${
-                targetVehicleType === 'non_autonomous'
-                  ? 'bg-red-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <AlertTriangle className="w-3.5 h-3.5 text-red-300" />
-              <span>Non-Autonomous</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setTargetVehicleType('autonomous')}
-              className={`py-2 px-2 rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1 ${
-                targetVehicleType === 'autonomous'
-                  ? 'bg-emerald-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-300" />
-              <span>Autonomous</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Live AI Scanner Toggle & Presets Bar */}
-        {inputMethod === 'camera' && !customImageUri && (
-          <div className="flex items-center justify-between gap-2 bg-slate-950/60 p-2.5 rounded-2xl border border-slate-800 text-xs">
-            {/* Live Continuous Scan Toggle (Prompt 3) */}
-            <button
-              onClick={() => setIsLiveMode(!isLiveMode)}
-              className={`px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                isLiveMode
-                  ? 'bg-red-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.5)]'
-                  : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-              }`}
-            >
-              <Radio className={`w-3.5 h-3.5 ${isLiveMode ? 'animate-pulse' : ''}`} />
-              <span>{isLiveMode ? 'Live Active' : 'Live AI'}</span>
-            </button>
-
-            {/* Split-Screen Compare Mode Toggle (Prompt 7) */}
-            <button
-              onClick={() => setIsSplitCompareMode(!isSplitCompareMode)}
-              className={`px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                isSplitCompareMode
-                  ? 'bg-[#5A41DE] text-white shadow-[0_0_15px_rgba(90,65,222,0.5)]'
-                  : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-              }`}
-              title="Split view into raw vs AI overlay"
-            >
-              <Layers className="w-3.5 h-3.5 text-[#1FAE71]" />
-              <span>{isSplitCompareMode ? 'Split Mode On' : 'Split View'}</span>
-            </button>
-
-            {/* Scene Selector */}
-            <div className="flex items-center gap-1 overflow-x-auto">
-              {(['highway', 'urban', 'night', 'testtrack'] as const).map((scene) => (
+        {/* Responsive Container: 2 columns on lg screens in full-window, single clean column in phone frame */}
+        <div className={isPhoneFrame ? "flex flex-col space-y-4 max-w-2xl mx-auto w-full" : "grid grid-cols-1 lg:grid-cols-12 gap-5 items-start"}>
+          {/* Left Column (7 cols on lg in full window): Preview Camera & Canvas */}
+          <div className={isPhoneFrame ? "w-full space-y-3" : "lg:col-span-7 space-y-3"}>
+            {/* Live AI Scanner Toggle & Presets Bar */}
+            <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 bg-slate-950/70 p-2 sm:p-2.5 rounded-2xl border border-slate-800 text-xs">
+              <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                {/* Live Continuous Scan Toggle */}
                 <button
-                  key={scene}
-                  onClick={() => setPresetScene(scene)}
-                  className={`px-2 py-1 rounded-lg text-[10px] font-semibold capitalize transition-all cursor-pointer ${
-                    presetScene === scene
-                      ? 'bg-[#1FAE71] text-slate-950'
-                      : 'bg-slate-800/80 text-slate-400 hover:text-white'
+                  onClick={() => setIsLiveMode(!isLiveMode)}
+                  className={`px-2.5 sm:px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5 text-xs transition-all cursor-pointer whitespace-nowrap ${
+                    isLiveMode
+                      ? 'bg-red-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.5)]'
+                      : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
                   }`}
                 >
-                  {scene}
+                  <Radio className={`w-3.5 h-3.5 ${isLiveMode ? 'animate-pulse' : ''}`} />
+                  <span>{isLiveMode ? 'Live Active' : 'Live AI'}</span>
                 </button>
-              ))}
-            </div>
-          </div>
-        )}
 
-        {/* MAIN PREVIEW FRAME (Real Video Feed / Captured User Photo / Road Scene) */}
-        <div className="relative w-full h-72 sm:h-80 rounded-3xl overflow-hidden border-2 border-[#6C56EA]/50 bg-slate-950 shadow-[0_0_30px_rgba(90,65,222,0.25)] flex items-center justify-center group">
-          
-          {/* Real Webcam Stream View (Prompt 1) */}
-          {inputMethod === 'camera' && (
-            <div className={`relative w-full h-full ${isRealWebcamActive ? 'block' : 'hidden'}`}>
-              <video
-                ref={videoRef}
-                autoPlay
-                playsInline
-                muted
-                className="w-full h-full object-cover"
-              />
-
-              {/* Bounding Box Overlay over live webcam */}
-              <div
-                className="absolute border-2 border-[#1FAE71] bg-[#1FAE71]/15 rounded-lg pointer-events-none z-20 flex flex-col justify-between p-1.5 shadow-[0_0_20px_rgba(31,174,113,0.4)] transition-all duration-300"
-                style={{
-                  left: `${liveBoundingBox.x}%`,
-                  top: `${liveBoundingBox.y}%`,
-                  width: `${liveBoundingBox.width}%`,
-                  height: `${liveBoundingBox.height}%`,
-                }}
-              >
-                <div className="flex items-center gap-1 bg-[#1FAE71] text-slate-950 text-[10px] font-extrabold px-2 py-0.5 rounded-md self-start shadow-sm">
-                  <Eye className="w-3 h-3" />
-                  <span>{liveBoundingBox.label}</span>
-                </div>
+                {/* Split-Screen Compare Mode Toggle */}
+                <button
+                  onClick={() => setIsSplitCompareMode(!isSplitCompareMode)}
+                  className={`px-2.5 sm:px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5 text-xs transition-all cursor-pointer whitespace-nowrap ${
+                    isSplitCompareMode
+                      ? 'bg-[#5A41DE] text-white shadow-[0_0_15px_rgba(90,65,222,0.5)]'
+                      : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                  }`}
+                  title="Split view into raw vs AI overlay"
+                >
+                  <Layers className="w-3.5 h-3.5 text-[#1FAE71]" />
+                  <span>{isSplitCompareMode ? 'Split On' : 'Split View'}</span>
+                </button>
               </div>
-            </div>
-          )}
 
-          {/* Fallback Road SVG or Custom User Photo View (Prompt 2 & Prompt 7) */}
-          {(!isRealWebcamActive || inputMethod === 'gallery' || customImageUri) && (
-            isSplitCompareMode ? (
-              <div className="relative w-full h-full flex overflow-hidden">
-                {/* Left Half: RAW FEED */}
-                <div className="w-1/2 h-full overflow-hidden border-r-2 border-white/80 relative">
-                  <RoadSceneSVG
-                    scenePreset={presetScene}
-                    customImageUri={customImageUri}
-                    boundingBoxes={[]} // No bounding boxes on raw side
-                    showScanAnimation={false}
-                    showLidarRays={false}
+              {/* Scene Selector */}
+              {inputMethod === 'camera' && !customImageUri && (
+                <div className="flex items-center gap-1 overflow-x-auto max-w-full pb-0.5 no-scrollbar">
+                  {(['highway', 'urban', 'night', 'testtrack'] as const).map((scene) => (
+                    <button
+                      key={scene}
+                      onClick={() => setPresetScene(scene)}
+                      className={`px-2 py-1 rounded-lg text-[10px] font-semibold capitalize transition-all cursor-pointer shrink-0 ${
+                        presetScene === scene
+                          ? 'bg-[#1FAE71] text-slate-950 font-bold'
+                          : 'bg-slate-800/80 text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      {scene}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* MAIN PREVIEW FRAME */}
+            <div className="relative w-full h-64 sm:h-80 lg:h-[420px] rounded-3xl overflow-hidden border-2 border-[#6C56EA]/50 bg-slate-950 shadow-[0_0_30px_rgba(90,65,222,0.25)] flex items-center justify-center group">
+              {/* Real Webcam Stream View */}
+              {inputMethod === 'camera' && (
+                <div className={`relative w-full h-full ${isRealWebcamActive ? 'block' : 'hidden'}`}>
+                  <video
+                    ref={videoRef}
+                    autoPlay
+                    playsInline
+                    muted
+                    className="w-full h-full object-cover"
                   />
-                  <div className="absolute top-2 left-2 bg-black/80 text-white text-[9px] font-mono font-bold px-2 py-0.5 rounded-full border border-white/20">
-                    RAW OPTICAL FEED
+
+                  {/* Bounding Box Overlay over live webcam */}
+                  <div
+                    className="absolute border-2 border-[#1FAE71] bg-[#1FAE71]/15 rounded-lg pointer-events-none z-20 flex flex-col justify-between p-1.5 shadow-[0_0_20px_rgba(31,174,113,0.4)] transition-all duration-300"
+                    style={{
+                      left: `${liveBoundingBox.x}%`,
+                      top: `${liveBoundingBox.y}%`,
+                      width: `${liveBoundingBox.width}%`,
+                      height: `${liveBoundingBox.height}%`,
+                    }}
+                  >
+                    <div className="flex items-center gap-1 bg-[#1FAE71] text-slate-950 text-[10px] font-extrabold px-2 py-0.5 rounded-md self-start shadow-sm">
+                      <Eye className="w-3 h-3" />
+                      <span>{liveBoundingBox.label}</span>
+                    </div>
                   </div>
                 </div>
+              )}
 
-                {/* Right Half: AI OVERLAY */}
-                <div className="w-1/2 h-full overflow-hidden relative">
+              {/* Fallback Road SVG or Custom User Photo View */}
+              {(!isRealWebcamActive || inputMethod === 'gallery' || customImageUri) && (
+                isSplitCompareMode ? (
+                  <div className="relative w-full h-full flex overflow-hidden">
+                    {/* Left Half: RAW FEED */}
+                    <div className="w-1/2 h-full overflow-hidden border-r-2 border-white/80 relative">
+                      <RoadSceneSVG
+                        scenePreset={presetScene}
+                        customImageUri={customImageUri}
+                        boundingBoxes={[]}
+                        showScanAnimation={false}
+                        showLidarRays={false}
+                      />
+                      <div className="absolute top-2 left-2 bg-black/80 text-white text-[9px] font-mono font-bold px-2 py-0.5 rounded-full border border-white/20">
+                        RAW OPTICAL FEED
+                      </div>
+                    </div>
+
+                    {/* Right Half: AI OVERLAY */}
+                    <div className="w-1/2 h-full overflow-hidden relative">
+                      <RoadSceneSVG
+                        scenePreset={presetScene}
+                        customImageUri={customImageUri}
+                        boundingBoxes={[liveBoundingBox]}
+                        showScanAnimation={isScanning || isLiveMode}
+                        showLidarRays={true}
+                      />
+                      <div className="absolute top-2 right-2 bg-[#1FAE71] text-slate-950 text-[9px] font-mono font-bold px-2 py-0.5 rounded-full border border-white/20">
+                        AI OVERLAY & LIDAR
+                      </div>
+                    </div>
+
+                    {/* Center Divider Bar */}
+                    <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-1 bg-white shadow-[0_0_10px_#ffffff] z-10 pointer-events-none" />
+                  </div>
+                ) : (
                   <RoadSceneSVG
                     scenePreset={presetScene}
                     customImageUri={customImageUri}
@@ -522,161 +452,231 @@ export const DetectVehicleScreen: React.FC<DetectVehicleScreenProps> = ({
                     showScanAnimation={isScanning || isLiveMode}
                     showLidarRays={true}
                   />
-                  <div className="absolute top-2 right-2 bg-[#1FAE71] text-slate-950 text-[9px] font-mono font-bold px-2 py-0.5 rounded-full border border-white/20">
-                    AI OVERLAY & LIDAR
+                )
+              )}
+
+              {/* Flash Effect Overlay */}
+              {isFlashOn && (
+                <div className="absolute inset-0 bg-white/30 pointer-events-none z-30 transition-opacity" />
+              )}
+
+              {/* Scanning Line Indicator */}
+              {isScanning && (
+                <div className="absolute inset-0 pointer-events-none z-30 flex flex-col items-center justify-center bg-black/50 backdrop-blur-[2px]">
+                  <div className="w-full h-1 bg-[#1FAE71] shadow-[0_0_25px_#1FAE71] animate-scan-line relative" />
+                  <div className="bg-slate-900/90 border border-[#1FAE71]/50 text-[#1FAE71] text-xs font-mono px-4 py-2 rounded-full mt-4 flex items-center gap-2 shadow-xl">
+                    <Scan className="w-4 h-4 animate-spin" />
+                    <span>{getTranslation(lang, 'scanning')}</span>
                   </div>
                 </div>
+              )}
 
-                {/* Center Divider Bar */}
-                <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-1 bg-white shadow-[0_0_10px_#ffffff] z-10 pointer-events-none" />
-              </div>
-            ) : (
-              <RoadSceneSVG
-                scenePreset={presetScene}
-                customImageUri={customImageUri}
-                boundingBoxes={[liveBoundingBox]}
-                showScanAnimation={isScanning || isLiveMode}
-                showLidarRays={true}
-              />
-            )
-          )}
+              {/* Floating Camera Controls Toolbar */}
+              <div className="absolute bottom-3 inset-x-3 z-20 flex items-center justify-between px-3 py-2 rounded-2xl bg-slate-900/85 backdrop-blur-md border border-slate-700/80 text-xs">
+                {/* Flash Button */}
+                <button
+                  onClick={() => setIsFlashOn(!isFlashOn)}
+                  className={`p-2 rounded-xl flex items-center gap-1.5 transition-colors cursor-pointer ${
+                    isFlashOn ? 'bg-[#F5A524] text-slate-950 font-bold' : 'bg-slate-800 text-slate-300 hover:text-white'
+                  }`}
+                >
+                  {isFlashOn ? <Zap className="w-4 h-4" /> : <ZapOff className="w-4 h-4" />}
+                  <span>{getTranslation(lang, 'flash')}</span>
+                </button>
 
-          {/* Flash Effect Overlay */}
-          {isFlashOn && (
-            <div className="absolute inset-0 bg-white/30 pointer-events-none z-30 transition-opacity" />
-          )}
+                {/* Circular Camera Shutter Button */}
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={handleStartDetection}
+                  disabled={isScanning}
+                  className="p-1 rounded-full border-2 border-white/80 bg-red-500 hover:bg-red-600 text-white shadow-lg cursor-pointer flex items-center justify-center"
+                  title="Capture Frame & Detect"
+                >
+                  <Disc className="w-7 h-7 animate-pulse text-white" />
+                </motion.button>
 
-          {/* Scanning Line Indicator */}
-          {isScanning && (
-            <div className="absolute inset-0 pointer-events-none z-30 flex flex-col items-center justify-center bg-black/50 backdrop-blur-[2px]">
-              <div className="w-full h-1 bg-[#1FAE71] shadow-[0_0_25px_#1FAE71] animate-scan-line relative" />
-              <div className="bg-slate-900/90 border border-[#1FAE71]/50 text-[#1FAE71] text-xs font-mono px-4 py-2 rounded-full mt-4 flex items-center gap-2 shadow-xl">
-                <Scan className="w-4 h-4 animate-spin" />
-                <span>{getTranslation(lang, 'scanning')}</span>
+                {/* Camera Flip Button */}
+                <button
+                  onClick={() => {
+                    if (!isRealWebcamActive) {
+                      startCamera();
+                    } else {
+                      setCameraFacing((prev) => (prev === 'environment' ? 'user' : 'environment'));
+                    }
+                  }}
+                  className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 flex items-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <RefreshCw className="w-4 h-4 text-[#1FAE71]" />
+                  <span>{getTranslation(lang, 'switchCamera')}</span>
+                </button>
               </div>
             </div>
-          )}
 
-          {/* Floating Camera Controls Toolbar */}
-          <div className="absolute bottom-3 inset-x-3 z-20 flex items-center justify-between px-3 py-2 rounded-2xl bg-slate-900/85 backdrop-blur-md border border-slate-700/80 text-xs">
-            {/* Flash Button */}
-            <button
-              onClick={() => setIsFlashOn(!isFlashOn)}
-              className={`p-2 rounded-xl flex items-center gap-1.5 transition-colors cursor-pointer ${
-                isFlashOn ? 'bg-[#F5A524] text-slate-950 font-bold' : 'bg-slate-800 text-slate-300 hover:text-white'
-              }`}
-            >
-              {isFlashOn ? <Zap className="w-4 h-4" /> : <ZapOff className="w-4 h-4" />}
-              <span>{getTranslation(lang, 'flash')}</span>
-            </button>
+            {/* Loaded Custom Image Badge */}
+            {customImageUri && (
+              <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-[#1FAE71]" />
+                  <span className="truncate max-w-[200px]">Photo Loaded: {customFileName || 'Custom Image'}</span>
+                </div>
+                <button
+                  onClick={() => setCustomImageUri(null)}
+                  className="text-[11px] underline text-emerald-200 hover:text-white cursor-pointer"
+                >
+                  Clear
+                </button>
+              </div>
+            )}
 
-            {/* Circular Camera Shutter Button (Prompt 1) */}
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={handleStartDetection}
-              disabled={isScanning}
-              className="p-1 rounded-full border-2 border-white/80 bg-red-500 hover:bg-red-600 text-white shadow-lg cursor-pointer flex items-center justify-center"
-              title="Capture Frame & Detect"
-            >
-              <Disc className="w-7 h-7 animate-pulse text-white" />
-            </motion.button>
-
-            {/* Camera Flip Button */}
-            <button
-              onClick={() => {
-                if (!isRealWebcamActive) {
-                  startCamera();
-                } else {
-                  setCameraFacing((prev) => (prev === 'environment' ? 'user' : 'environment'));
-                }
-              }}
-              className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 flex items-center gap-1.5 transition-colors cursor-pointer"
-            >
-              <RefreshCw className="w-4 h-4 text-[#1FAE71]" />
-              <span>{getTranslation(lang, 'switchCamera')}</span>
-            </button>
+            {/* Friendly Error / Permission Denial Handling */}
+            {webcamError && (
+              <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs space-y-1">
+                <div className="flex items-center gap-2 font-semibold text-amber-400">
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <span>Camera Access Restricted</span>
+                </div>
+                <p className="text-[11px] text-amber-200/80">
+                  {webcamError} You can upload real vehicle photos directly from your gallery or use our road simulator above.
+                </p>
+              </div>
+            )}
           </div>
-        </div>
 
-        {/* Friendly Error / Permission Denial Handling (Prompt 1) */}
-        {webcamError && (
-          <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs space-y-2">
-            <div className="flex items-center gap-2 font-semibold text-amber-400">
-              <AlertCircle className="w-4 h-4 shrink-0" />
-              <span>Camera Access Restricted</span>
-            </div>
-            <p className="text-[11px] text-amber-200/80">
-              {webcamError} You can upload real vehicle photos directly from your gallery or use our road simulator below.
-            </p>
-            <div className="flex items-center gap-2 pt-1">
-              <button
+          {/* Right Column (5 cols on lg in full window): Controls, Classification Mode, Live Telemetry & Actions */}
+          <div className={isPhoneFrame ? "w-full space-y-3.5" : "lg:col-span-5 space-y-3.5"}>
+            {/* Toggle Input Mode: Camera vs Gallery */}
+            <div className="bg-slate-800/80 p-1.5 rounded-2xl border border-slate-700/80 flex items-center gap-1.5">
+              <motion.button
+                whileTap={{ scale: 0.96 }}
+                onClick={() => {
+                  setInputMethod('camera');
+                  setCustomImageUri(null);
+                }}
+                className={`flex-1 py-2.5 px-2.5 sm:px-3 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer ${
+                  inputMethod === 'camera'
+                    ? 'bg-[#5A41DE] text-white shadow-md'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <Camera className="w-4 h-4 shrink-0" />
+                <span className="truncate">{getTranslation(lang, 'cameraSimulator')}</span>
+              </motion.button>
+
+              <motion.button
+                whileTap={{ scale: 0.96 }}
                 onClick={() => {
                   setInputMethod('gallery');
                   if (fileInputRef.current) fileInputRef.current.click();
                 }}
-                className="px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-[11px] cursor-pointer"
+                className={`flex-1 py-2.5 px-2.5 sm:px-3 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer ${
+                  inputMethod === 'gallery'
+                    ? 'bg-[#5A41DE] text-white shadow-md'
+                    : 'text-slate-400 hover:text-white'
+                }`}
               >
-                Upload from Gallery
-              </button>
+                <Upload className="w-4 h-4 shrink-0" />
+                <span className="truncate">{getTranslation(lang, 'galleryUpload')}</span>
+              </motion.button>
             </div>
-          </div>
-        )}
 
-        {/* Loaded Custom Image Badge (Prompt 2) */}
-        {customImageUri && (
-          <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-[#1FAE71]" />
-              <span className="truncate max-w-[200px]">Photo Loaded: {customFileName || 'Custom Image'}</span>
+            {/* Strict Target Classification Mode Switcher */}
+            <div className="bg-slate-900/90 p-3 sm:p-3.5 rounded-2xl border border-slate-800 space-y-2.5">
+              <div className="flex items-center justify-between text-xs font-semibold text-slate-300">
+                <span className="flex items-center gap-1.5 text-violet-400">
+                  <ShieldCheck className="w-4 h-4 text-[#1FAE71] shrink-0" />
+                  <span className="truncate">Hardware Mode</span>
+                </span>
+                <span className="text-[10px] text-slate-400 font-mono shrink-0">
+                  {targetVehicleType === 'non_autonomous'
+                    ? '🔴 Non-AV'
+                    : targetVehicleType === 'autonomous'
+                    ? '🟢 AV Mode'
+                    : '⚡ Smart AI'}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-3 gap-1 p-1 bg-slate-950 rounded-xl border border-slate-800 text-[10px] sm:text-xs font-bold">
+                <button
+                  type="button"
+                  onClick={() => setTargetVehicleType('auto')}
+                  className={`py-2 px-1 sm:px-2 rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1 ${
+                    targetVehicleType === 'auto'
+                      ? 'bg-[#5A41DE] text-white shadow-sm'
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  <Sparkles className="w-3 h-3 text-amber-400 shrink-0" />
+                  <span className="truncate">Auto AI</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setTargetVehicleType('non_autonomous')}
+                  className={`py-2 px-1 sm:px-2 rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1 ${
+                    targetVehicleType === 'non_autonomous'
+                      ? 'bg-red-600 text-white shadow-sm'
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  <AlertTriangle className="w-3 h-3 text-red-300 shrink-0" />
+                  <span className="truncate">Non-AV</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setTargetVehicleType('autonomous')}
+                  className={`py-2 px-1 sm:px-2 rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1 ${
+                    targetVehicleType === 'autonomous'
+                      ? 'bg-emerald-600 text-white shadow-sm'
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  <CheckCircle2 className="w-3 h-3 text-emerald-300 shrink-0" />
+                  <span className="truncate">Autonomous</span>
+                </button>
+              </div>
             </div>
-            <button
-              onClick={() => setCustomImageUri(null)}
-              className="text-[11px] underline text-emerald-200 hover:text-white cursor-pointer"
+
+            {/* Live Sensor Telemetry Mini-Matrix */}
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="p-3 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-1">
+                <p className="text-[10px] text-slate-400 uppercase font-semibold">LiDAR Points</p>
+                <p className="font-space font-bold text-base text-emerald-400">142,000 pts</p>
+                <p className="text-[10px] text-slate-500">Dual-Solid State LiDAR</p>
+              </div>
+
+              <div className="p-3 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-1">
+                <p className="text-[10px] text-slate-400 uppercase font-semibold">Perception Latency</p>
+                <p className="font-space font-bold text-base text-purple-300">14 ms (60 FPS)</p>
+                <p className="text-[10px] text-slate-500">TensorRT Edge Kernel</p>
+              </div>
+            </div>
+
+            {/* Primary Detect Action Button */}
+            <motion.button
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={handleStartDetection}
+              disabled={isScanning}
+              className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-[#1FAE71] to-[#2FD18B] hover:from-[#1A9C65] hover:to-[#28BA7B] text-slate-950 font-bold text-base shadow-[0_10px_25px_rgba(31,174,113,0.3)] transition-all flex items-center justify-center gap-3 cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed"
             >
-              Clear
-            </button>
-          </div>
-        )}
-
-        {/* Primary Detect Action Button */}
-        <motion.button
-          whileHover={{ scale: 1.01 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={handleStartDetection}
-          disabled={isScanning}
-          className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-[#1FAE71] to-[#2FD18B] hover:from-[#1A9C65] hover:to-[#28BA7B] text-slate-950 font-bold text-base shadow-[0_10px_25px_rgba(31,174,113,0.3)] transition-all flex items-center justify-center gap-3 cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed"
-        >
-          {isScanning ? (
-            <>
-              <Scan className="w-5 h-5 animate-spin text-slate-950" />
-              <span>{getTranslation(lang, 'scanning')}</span>
-            </>
-          ) : (
-            <>
-              <Sparkles className="w-5 h-5 text-slate-950" />
-              <span>
-                {customImageUri
-                  ? 'Detect Autonomous Features in Photo'
-                  : getTranslation(lang, 'detectNow')}
-              </span>
-            </>
-          )}
-        </motion.button>
-
-        {/* Feature Spec Tags */}
-        <div className="grid grid-cols-3 gap-2 text-center text-[11px] text-slate-400 pt-1">
-          <div className="p-2.5 rounded-xl bg-slate-800/60 border border-slate-800">
-            <p className="font-semibold text-slate-200">LiDAR Fusion</p>
-            <p className="text-[10px] text-slate-500">360° Density</p>
-          </div>
-          <div className="p-2.5 rounded-xl bg-slate-800/60 border border-slate-800">
-            <p className="font-semibold text-slate-200">YOLOv8 Custom</p>
-            <p className="text-[10px] text-slate-500">Real-time FPS: 60</p>
-          </div>
-          <div className="p-2.5 rounded-xl bg-slate-800/60 border border-slate-800">
-            <p className="font-semibold text-slate-200">Confidence</p>
-            <p className="text-[10px] text-slate-500">92%+ High</p>
+              {isScanning ? (
+                <>
+                  <Scan className="w-5 h-5 animate-spin text-slate-950" />
+                  <span>{getTranslation(lang, 'scanning')}</span>
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-5 h-5 text-slate-950" />
+                  <span>
+                    {customImageUri
+                      ? 'Detect Vehicle Features'
+                      : getTranslation(lang, 'detectNow')}
+                  </span>
+                </>
+              )}
+            </motion.button>
           </div>
         </div>
       </div>

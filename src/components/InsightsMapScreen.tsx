@@ -148,12 +148,12 @@ export const InsightsMapScreen: React.FC<InsightsMapScreenProps> = ({
         </div>
 
         {/* Filters & Legend Row */}
-        <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-slate-900 p-3 rounded-2xl border border-[#E4E0FD] dark:border-slate-800 shadow-xs text-xs">
+        <div className="flex flex-wrap items-center justify-between gap-2.5 bg-white dark:bg-slate-900 p-3 rounded-2xl border border-[#E4E0FD] dark:border-slate-800 shadow-xs text-xs">
           {/* Time Filter Toggle */}
-          <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+          <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl shrink-0">
             <button
               onClick={() => setTimeFilter('all')}
-              className={`px-3 py-1 rounded-lg font-bold transition-all ${
+              className={`px-2.5 sm:px-3 py-1 rounded-lg text-xs font-bold transition-all ${
                 timeFilter === 'all'
                   ? 'bg-white dark:bg-slate-700 text-[#5A41DE] dark:text-purple-300 shadow-xs'
                   : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
@@ -163,29 +163,29 @@ export const InsightsMapScreen: React.FC<InsightsMapScreenProps> = ({
             </button>
             <button
               onClick={() => setTimeFilter('peak')}
-              className={`px-3 py-1 rounded-lg font-bold transition-all ${
+              className={`px-2.5 sm:px-3 py-1 rounded-lg text-xs font-bold transition-all ${
                 timeFilter === 'peak'
                   ? 'bg-white dark:bg-slate-700 text-[#5A41DE] dark:text-purple-300 shadow-xs'
                   : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              Peak Hours (2–5 PM)
+              Peak (2–5 PM)
             </button>
           </div>
 
           {/* Color Scale Legend */}
-          <div className="flex items-center gap-3 font-semibold text-[11px]">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 font-semibold text-[10px] sm:text-[11px]">
             <span className="text-slate-400">AV Density:</span>
-            <div className="flex items-center gap-1">
-              <span className="w-3 h-3 rounded-full bg-emerald-500" />
+            <div className="flex items-center gap-1 shrink-0">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
               <span className="text-slate-600 dark:text-slate-300">Low (&lt;30%)</span>
             </div>
-            <div className="flex items-center gap-1">
-              <span className="w-3 h-3 rounded-full bg-amber-500" />
+            <div className="flex items-center gap-1 shrink-0">
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
               <span className="text-slate-600 dark:text-slate-300">Med (30-65%)</span>
             </div>
-            <div className="flex items-center gap-1">
-              <span className="w-3 h-3 rounded-full bg-red-500" />
+            <div className="flex items-center gap-1 shrink-0">
+              <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
               <span className="text-slate-600 dark:text-slate-300">High (&gt;65%)</span>
             </div>
           </div>
