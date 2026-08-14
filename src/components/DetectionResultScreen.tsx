@@ -205,7 +205,7 @@ export const DetectionResultScreen: React.FC<DetectionResultScreenProps> = ({
         </div>
       </div>
 
-      <div className="p-4 sm:p-6 w-full max-w-7xl mx-auto space-y-4">
+      <div className={`w-full mx-auto space-y-4 ${isPhoneFrame ? 'p-4 sm:p-5 max-w-2xl' : 'p-4 sm:p-6 lg:p-8 max-w-[1600px]'}`}>
         {/* Banner Alert Header */}
         {record.isAutonomous ? (
           <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-[#1FAE71]/40 text-emerald-950 dark:text-emerald-200 flex items-center justify-between shadow-xs">

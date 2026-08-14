@@ -313,7 +313,7 @@ export const DetectVehicleScreen: React.FC<DetectVehicleScreenProps> = ({
       </div>
 
       {/* Main Detector Area */}
-      <div className="p-4 sm:p-6 w-full max-w-7xl mx-auto space-y-4">
+      <div className={`w-full mx-auto space-y-4 ${isPhoneFrame ? 'p-4 sm:p-5 max-w-2xl' : 'p-4 sm:p-6 lg:p-8 max-w-[1600px]'}`}>
         {/* Hidden File Input for Gallery mode */}
         <input
           ref={fileInputRef}

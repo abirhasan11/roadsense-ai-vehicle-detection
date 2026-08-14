@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { DetectionRecord, Language } from '../types';
 import { getTranslation } from '../lib/translations';
+import { useLayout } from '../context/LayoutContext';
 
 interface InsightsMapScreenProps {
   history: DetectionRecord[];
@@ -104,12 +105,14 @@ export const InsightsMapScreen: React.FC<InsightsMapScreenProps> = ({
     },
   ];
 
+  const { isPhoneFrame } = useLayout();
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
-      className="min-h-full bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 pb-28 space-y-5"
+      className={`min-h-full bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 space-y-5 ${isPhoneFrame ? 'pb-28' : 'pb-12 md:pb-8'}`}
     >
       {/* Header Bar */}
       <div className="bg-white dark:bg-slate-900 border-b border-[#E4E0FD] dark:border-slate-800 px-5 py-4 sticky top-0 z-20 shadow-xs flex items-center justify-between">
@@ -131,7 +134,7 @@ export const InsightsMapScreen: React.FC<InsightsMapScreenProps> = ({
         <div className="w-8" />
       </div>
 
-      <div className="p-4 sm:p-6 max-w-3xl mx-auto space-y-5">
+      <div className={`w-full mx-auto space-y-5 ${isPhoneFrame ? 'p-4 sm:p-5 max-w-2xl' : 'p-4 sm:p-6 lg:p-8 max-w-5xl'}`}>
         {/* Banner Intro */}
         <div className="p-4 rounded-3xl bg-gradient-to-r from-[#1C1745] to-[#5A41DE] text-white shadow-md flex items-center justify-between">
           <div>

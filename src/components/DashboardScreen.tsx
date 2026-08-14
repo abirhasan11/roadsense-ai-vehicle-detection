@@ -310,10 +310,10 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
-      className="min-h-full bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 pb-28"
+      className={`min-h-full bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 ${isPhoneFrame ? 'pb-28' : 'pb-12 md:pb-8'}`}
     >
-      {/* Header Bar */}
-      <div className="bg-white dark:bg-slate-900 border-b border-[#E4E0FD] dark:border-slate-800 px-4 sm:px-5 py-3 sm:py-4 sticky top-0 z-20 shadow-xs flex items-center justify-between">
+      {/* Mobile / Phone Frame Header Bar (hidden on desktop full-window where top navbar is active) */}
+      <div className={`${isPhoneFrame ? 'flex' : 'md:hidden flex'} bg-white dark:bg-slate-900 border-b border-[#E4E0FD] dark:border-slate-800 px-4 sm:px-5 py-3 sm:py-4 sticky top-0 z-20 shadow-xs items-center justify-between`}>
         <div className="flex items-center gap-2 sm:gap-3">
           <motion.button
             whileTap={{ scale: 0.9 }}
@@ -380,7 +380,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
       </div>
 
       {/* Main Content Area */}
-      <div className="p-4 sm:p-6 w-full max-w-7xl mx-auto">
+      <div className={`w-full mx-auto ${isPhoneFrame ? 'p-4 sm:p-5 max-w-2xl' : 'p-4 sm:p-6 lg:p-8 max-w-[1600px]'}`}>
         {loading ? (
           <DashboardSkeleton />
         ) : isPhoneFrame ? (

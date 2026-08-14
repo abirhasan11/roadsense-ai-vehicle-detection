@@ -181,29 +181,29 @@ export const DesktopWrapper: React.FC<DesktopWrapperProps> = ({
       </header>
 
       {/* Main Container */}
-      <main className="w-full flex-1 flex items-start justify-center p-0 md:py-4 md:px-6">
+      <main className="w-full flex-1 flex flex-col items-stretch">
         <LayoutContext.Provider value={{ layoutMode, setLayoutMode, isPhoneFrame: layoutMode === 'phoneFrame' }}>
           {layoutMode === 'phoneFrame' ? (
             /* Phone Frame Container on Desktop */
-            <div className="w-full min-h-screen md:min-h-0 md:h-[840px] md:max-w-[430px] md:rounded-[44px] md:border-[10px] md:border-slate-800 md:shadow-[0_25px_60px_rgba(0,0,0,0.6)] bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 overflow-hidden relative flex flex-col transition-all duration-300 my-auto">
-              {/* Phone Speaker Notch bar (desktop only) */}
-              <div className="hidden md:flex justify-center pt-2 pb-1 bg-slate-900 shrink-0">
-                <div className="w-24 h-4 bg-slate-950 rounded-full flex items-center justify-center">
-                  <div className="w-12 h-1 bg-slate-800 rounded-full" />
+            <div className="w-full flex-1 flex items-center justify-center p-4 md:py-8 bg-slate-900/60 min-h-[calc(100vh-61px)]">
+              <div className="w-full h-[840px] max-w-[430px] rounded-[44px] border-[10px] border-slate-800 shadow-[0_25px_60px_rgba(0,0,0,0.6)] bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 overflow-hidden relative flex flex-col transition-all duration-300">
+                {/* Phone Speaker Notch bar (desktop only) */}
+                <div className="hidden md:flex justify-center pt-2 pb-1 bg-slate-900 shrink-0">
+                  <div className="w-24 h-4 bg-slate-950 rounded-full flex items-center justify-center">
+                    <div className="w-12 h-1 bg-slate-800 rounded-full" />
+                  </div>
                 </div>
-              </div>
 
-              {/* App Screen Content */}
-              <div className="flex-1 overflow-y-auto relative bg-slate-50 dark:bg-slate-950">
-                {children}
+                {/* App Screen Content */}
+                <div className="flex-1 overflow-y-auto relative bg-slate-50 dark:bg-slate-950">
+                  {children}
+                </div>
               </div>
             </div>
           ) : (
-            /* Full Window Responsive Container */
-            <div className="w-full max-w-7xl bg-slate-50 dark:bg-slate-950 md:rounded-3xl md:border md:border-slate-800 md:shadow-2xl overflow-hidden text-slate-800 dark:text-slate-100 flex flex-col relative transition-all duration-300 min-h-screen md:min-h-[calc(100vh-80px)]">
-              <div className="flex-1 relative bg-slate-50 dark:bg-slate-950">
-                {children}
-              </div>
+            /* Full Window Edge-to-Edge Responsive Container on Laptop/Desktop */
+            <div className="w-full flex-1 bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col relative transition-all duration-300 min-h-[calc(100vh-61px)]">
+              {children}
             </div>
           )}
         </LayoutContext.Provider>
